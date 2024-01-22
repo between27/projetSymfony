@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UsersRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -26,6 +28,20 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\OneToMany(mappedBy: 'userId', targetEntity: Teams::class)]
+    private Collection $teams;
+
+    #[ORM\ManyToMany(targetEntity: Characters::class, mappedBy: 'users')]
+    private Collection $characters;
+
+    public function __construct()
+    {
+        $this->teams = new ArrayCollection();
+        $this->characters = new ArrayCollection();
+    }
+
+
 
     public function getId(): ?int
     {
@@ -96,4 +112,63 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+
+    /**
+     * @return Collection<int, Teams>
+     */
+    public function getTeams(): Collection
+    {
+        return $this->teams;
+    }
+
+    public function addTeam(Teams $team): static
+    {
+        if (!$this->teams->contains($team)) {
+            $this->teams->add($team);
+            $team->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTeam(Teams $team): static
+    {
+        if ($this->teams->removeElement($team)) {
+            // set the owning side to null (unless already changed)
+            if ($team->getUserId() === $this) {
+                $team->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Characters>
+     */
+    public function getCharacters(): Collection
+    {
+        return $this->characters;
+    }
+
+    public function addCharacter(Characters $character): static
+    {
+        if (!$this->characters->contains($character)) {
+            $this->characters->add($character);
+            $character->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCharacter(Characters $character): static
+    {
+        if ($this->characters->removeElement($character)) {
+            $character->removeUser($this);
+        }
+
+        return $this;
+    }
+
+
 }
