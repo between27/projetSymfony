@@ -15,10 +15,12 @@ class Teams
     #[ORM\Column]
     private ?int $id = null;
 
+
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
     #[ORM\ManyToMany(targetEntity: Characters::class, inversedBy: 'teams')]
+
     private Collection $characters;
 
     public function __construct()
@@ -55,6 +57,7 @@ class Teams
     {
         if (!$this->characters->contains($character)) {
             $this->characters->add($character);
+
         }
 
         return $this;
@@ -62,7 +65,9 @@ class Teams
 
     public function removeCharacter(Characters $character): static
     {
+
         $this->characters->removeElement($character);
+
 
         return $this;
     }
