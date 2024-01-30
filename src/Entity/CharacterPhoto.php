@@ -2,18 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\CharacterPhotosRepository;
+use App\Repository\CharacterPhotoRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CharacterPhotosRepository::class)]
-class CharacterPhotos
+#[ORM\Entity(repositoryClass: CharacterPhotoRepository::class)]
+class CharacterPhoto
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'characterPhoto', cascade: ['persist', 'remove'])]
     private ?Characters $characterId = null;
 
     #[ORM\Column(length: 255)]

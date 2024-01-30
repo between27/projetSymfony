@@ -39,6 +39,9 @@ class Characters
     #[ORM\ManyToMany(targetEntity: Teams::class, mappedBy: 'characters')]
     private Collection $teams;
 
+    #[ORM\OneToOne(mappedBy: 'characterId', cascade: ['persist', 'remove'])]
+    private ?CharacterPhoto $characterPhoto = null;
+
     public function __construct()
     {
         $this->weapons = new ArrayCollection();
@@ -173,6 +176,28 @@ class Characters
             $team->removeCharacter($this);
         }
 
+
+        return $this;
+    }
+
+    public function getCharacterPhoto(): ?CharacterPhoto
+    {
+        return $this->characterPhoto;
+    }
+
+    public function setCharacterPhoto(?CharacterPhoto $characterPhoto): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($characterPhoto === null && $this->characterPhoto !== null) {
+            $this->characterPhoto->setCharacterId(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($characterPhoto !== null && $characterPhoto->getCharacterId() !== $this) {
+            $characterPhoto->setCharacterId($this);
+        }
+
+        $this->characterPhoto = $characterPhoto;
 
         return $this;
     }
