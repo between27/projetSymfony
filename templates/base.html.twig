@@ -18,11 +18,7 @@
         </div>
 <div class="flex items-center mr-5 space-x-5">
             <a href="{{ path('home') }}" class="text-gray-700 hover:text-gray-900 text-4xl">Home</a>
-    {% if app.user %}
-    <a href="{{ path('app_logout') }}" class="text-gray-700 hover:text-gray-900 text-4xl">se deconnecter</a>
-    {% else %}
-    <a href="{{ path('app_login') }}" class="text-gray-700 hover:text-gray-900 text-4xl">se connecter</a>
-    {% endif %}
+
 
         </div>
     </nav>
