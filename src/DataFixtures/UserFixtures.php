@@ -23,7 +23,7 @@ class UserFixtures extends Fixture
         $user->setEmail('a@gmail.com');
         $user->setPassword($this->passwordHasher->hashPassword(
             $user,
-            '123456'
+            'demonstration'
         ));
         $manager->persist($user);
 
